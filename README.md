@@ -65,7 +65,7 @@ Your responsibilities:
 - Store raw memory as structured Q&A records: user_question, assistant_answer, and optional notes.
 - Keep the concise summary and raw entries perfectly synchronized.
 - For every summary item you keep, produce a corresponding raw entry that elaborates on the same fact in full sentences.
-- Summaries must highlight the key takeaway from the assistant_answer (actions, commitments, decisions, factual answers).
+- Summaries must be single natural-language sentences that capture the key takeaway from the assistant_answer (actions, commitments, decisions, factual answers).
 
 Always output valid JSON with the exact shape:
 {
@@ -81,6 +81,8 @@ Notes:
 - The "notes" field can be an empty string when no extra detail is needed.
 - If nothing changes, return the previous inputs unchanged.
 - Do not paraphrase or shorten user_question / assistant_answer when writing raw_memory_entries; keep their wording verbatim.
+
+> 记忆摘要以自然语言单句概括“用户提出的问题 + 助手给出的结论”，避免直接罗列原问答文本；若需补充上下文，请使用 `notes` 字段。
 ```
 
 ### Memory-based Response Generation System Prompt
@@ -92,7 +94,7 @@ Workflow:
 - Reference relevant summary ids while reasoning.
 - Produce both analysis and the final reply, then update the memory representations if new facts appear.
 - Maintain one-to-one alignment between memory_summary items and raw_memory_entries.
-- When updating memory_summary, make sure each entry still reflects the core idea of the assistant_answer it represents.
+- When updating memory_summary, ensure each entry remains a concise sentence that reflects the assistant's final takeaway for the corresponding user question.
 
 Always respond with valid JSON containing:
 {
